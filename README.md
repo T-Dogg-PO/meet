@@ -1,6 +1,9 @@
 # MEET
 ## A React app for finding events in different cities
 
+## Purpose
+The purpose of this MEET app is to practice building a serverless, progressive web application (PWA) with React using a test-driven development technique.
+
 ## User Story Scenarios (written with the Gherkin "Given-When-Then" syntax)
 
 ### Feature 1: Filter Events by City:
