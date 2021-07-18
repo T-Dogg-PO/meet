@@ -64,6 +64,7 @@ provider:
 #    - include-me.js
 #    - include-me-dir/**
 
+# Configuration information for the serverless functions. This tells serverless what the function is and how to deploy it to AWS
 functions:
   getAuthURL:
     handler: handler.getAuthURL

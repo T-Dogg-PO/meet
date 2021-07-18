@@ -1,5 +1,4 @@
 const { google } = require("googleapis");
-const { resultingClientExists } = require("workbox-core/_private");
 const OAuth2 = google.auth.OAuth2;
 const calendar = google.calendar("v3");
 
@@ -25,14 +24,16 @@ const oAuth2Client = new google.auth.OAuth2(
   redirect_uris[0]
 );
 
-// The OAuth process, which first generates a URL so users can log in with Google and be authorized to see the calendar. After logging in they'll recieve a code as a URL parameter
+// Step 1 of the OAuth process, which first generates a URL so users can log in with Google and be authorized to see the calendar. After logging in they'll recieve a code as a URL parameter (used in step 2 - getting the access token)
 module.exports.getAuthURL = async () => {
   // The SCOPES array is passed to the scope option. These SCOPES must be enabled in Google Console
+  // oAuth2Client.generateAuthUrl will create the authURL for us with the specified options (e.g. what access levels we have for the GoogleCalendar API)
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES
   });
 
+  // Then we simply return the authURL from above
   return {
     statusCode: 200,
     headers: {
@@ -44,8 +45,9 @@ module.exports.getAuthURL = async () => {
   };
 };
 
+// Step 2 - After authorization with Google in step 1, exchange the code parameter from the authURL for an access token to the Google Calendar
 module.exports.getAccessToken = async (event) => {
-  // Instantiate a new OAuthClient with values from above
+  // Instantiate a new OAuthClient with values from the credentials above. For each request we need to create aa new OAuthClient and return a promise (which means we don't have a value for it yet, but will soon)
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
     client_secret,
@@ -83,18 +85,24 @@ module.exports.getAccessToken = async (event) => {
   });
 };
 
+// Step 3 - With the access token we can now access the Google Calendar
 module.exports.getCalendarEvents = async (event) => {
-  const oAuth2Client = new google.authOAuth2(
+  // Again instantiate a new OAuthClient with values from the credentials above
+  const oAuth2Client = new google.auth.OAuth2(
     client_id,
     client_secret,
     redirect_uris[0]
   );
 
-  const access_token = decodeURIComponent(`${event.pathParameters.code}`);
+  // Decode the access token extracted from the URL passed in
+  const access_token = decodeURIComponent(`${event.pathParameters.access_token}`);
 
+  // Set the access_token as credentials for our OAuthClient
   oAuth2Client.setCredentials({ access_token });
 
+  // Return a new promise
   return new Promise((resolve, reject) => {
+    // In the promise's callback function, we use this calendar method to get a list of events from the Google Calendar in question using our oAuth2Client for authentication
     calendar.events.list(
       {
         calendarId: calendar_id,
@@ -103,6 +111,7 @@ module.exports.getCalendarEvents = async (event) => {
         singleEvents: true,
         orderBy: "startTime"
       },
+      // Then use a callback to resolve or reject the promise
       (error, response) => {
         if (error) {
           reject(error);
@@ -111,6 +120,7 @@ module.exports.getCalendarEvents = async (event) => {
         }
       }
     );
+  // Then finally return the calendar events
   }).then((results) => {
     return {
       statusCode: 200,
