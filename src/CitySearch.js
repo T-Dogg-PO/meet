@@ -6,6 +6,7 @@ class CitySearch extends Component {
         suggestions: []
     }
 
+    // Function to update the state when the user types into the search box (query is what the user has typed into the search box, suggestions is the list of city suggestions)
     handleInputChanged = (event) => {
         const value = event.target.value;
         const suggestions = this.props.locations.filter((location) => {
@@ -17,6 +18,7 @@ class CitySearch extends Component {
         });
     };
 
+    // Function to update the state when the user clicks on a search suggestion
     handleItemClicked = (suggestion) => {
         this.setState({
             query: suggestion
