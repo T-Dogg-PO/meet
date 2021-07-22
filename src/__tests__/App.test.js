@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 import App from '../App';
 import EventList from '../EventList';
 import CitySearch from '../CitySearch';
+import NumberOfEvents from '../NumberOfEvents';
 
 // A new group/scope called '<App /> component' to help keep tests organised
 describe('<App /> component', () => {
@@ -22,5 +23,10 @@ describe('<App /> component', () => {
     // The first test is always to make sure the required component exists
     test('render CitySearch', () => {
         expect(AppWrapper.find(CitySearch)).toHaveLength(1);
+    });
+
+    // Test to ensure the NumberOfEvents component is rendered
+    test('render NumberOfEvents', () => {
+        expect(AppWrapper.find(NumberOfEvents)).toHaveLength(1);
     });
 });
