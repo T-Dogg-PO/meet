@@ -9,7 +9,7 @@ describe('<CitySearch /> component', () => {
     let locations, CitySearchWrapper;
     beforeAll(() => {
         locations = extractLocations(mockData);
-        CitySearchWrapper = shallow(<CitySearch locations={locations} />);
+        CitySearchWrapper = shallow(<CitySearch locations={locations} updateEvents={() => {}} />);
     });
 
     // Test to make sure the .city (a CSS class) textbox exists
@@ -86,5 +86,24 @@ describe('<CitySearch /> component', () => {
         const suggestions = CitySearchWrapper.state('suggestions');
         CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
         expect(CitySearchWrapper.state('query')).toBe(suggestions[0]);
+    });
+
+    // Test to make sure that selecting the CitySearch input reveals the suggestions list
+    test("selecting CitySearch input reveals the suggestions list", () => {
+        CitySearchWrapper.find('.city').simulate('focus');
+        expect(CitySearchWrapper.state('showSuggestions')).toBe(true);
+        expect(CitySearchWrapper.find('.suggestions').prop('stype')).not.toEqual({ display: 'none' });
+    });
+
+    // Test to make sure the suggestions list is hidden when a suggestion is clicked
+    test("selecting a suggestion should hide the suggestions list", () => {
+        // Manually change showSuggestions back to undefined, otherwise it will hold the true value from the previous test
+        CitySearchWrapper.setState({
+            query: 'Berlin',
+            showSuggestions: undefined
+        });
+        CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
+        expect(CitySearchWrapper.state('showSuggestions')).toBe(false);
+        expect(CitySearchWrapper.find('.suggestions').prop('style')).toEqual({ display: 'none' });
     });
 });
