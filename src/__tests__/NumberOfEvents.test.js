@@ -22,11 +22,4 @@ describe('<NumberOfEvents /> component', () => {
     test('default input is 32', () => {
         expect(NumberOfEventsWrapper.find('.events-number-input').prop('value')).toBe(NumberOfEventsWrapper.state('eventsNumber'));
     });
-
-    // Test to ensure the number of events is changed when the input box is updated (i.e. the state is updated)
-    test('change state when input changes', () => {
-        const eventObject = { target: { value: 10 } };
-        NumberOfEventsWrapper.find('.events-number-input').simulate('change', eventObject);
-        expect(NumberOfEventsWrapper.state('eventsNumber')).toBe(10);
-    });
 });

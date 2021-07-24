@@ -35,7 +35,7 @@ describe('<App /> component', () => {
 
 // Separate scope for integration tests
 describe('<App /> integration', () => {
-    // Test to ensure EventList gets events as a prop from App (where it's defined in App's state)
+    // Test to ensure EventList gets events and numberOfEvents as a prop from App (where it's defined in App's state)
     test('App passes "events" state as a prop to EventList', () => {
         // Because we are rendering the components children, we need full rendering API (mount)
         const AppWrapper = mount(<App />);
@@ -88,5 +88,18 @@ describe('<App /> integration', () => {
         const allEvents = await getEvents();
         expect(AppWrapper.state('events')).toEqual(allEvents);
         AppWrapper.unmount();
-    })
+    });
+
+    // Test to ensure the number of events is changed when the input box is updated (i.e. the state is updated, then the actual length of the array is updated)
+    // Testing with a value of 1 because there are only 2 events in the mockData
+    test('change state of App numberOfEvents when number input changes', async () => {
+        const AppWrapper = mount(<App />);
+        const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+        const eventObject = { target: { value: 1 } };
+        await NumberOfEventsWrapper.find('.events-number-input').simulate('change', eventObject);
+        expect(NumberOfEventsWrapper.state('eventsNumber')).toBe(1);
+        expect(AppWrapper.state('numberOfEvents')).toBe(1);
+        expect(AppWrapper.state('events').length).toBe(1);
+        AppWrapper.unmount();
+    });
 });

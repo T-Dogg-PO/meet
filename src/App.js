@@ -10,7 +10,9 @@ import './nprogress.css';
 class App extends Component {
   state = {
     events: [],
-    locations: []
+    locations: [],
+    numberOfEvents: 32,
+    currentLocation: 'all'
   }
 
   // Part of loading events when the app loads. componentDidMount will make an API call and save the initial data to state
@@ -19,7 +21,7 @@ class App extends Component {
     this.mounted = true;
     getEvents().then((events) => {
       if (this.mounted) {
-        this.setState({ events, locations: extractLocations(events) });
+        this.setState({ events: events.slice(0, this.state.numberOfEvents), locations: extractLocations(events) });
       }
     });
   }
@@ -32,10 +34,19 @@ class App extends Component {
   updateEvents = (location) => {
     getEvents().then((events) => {
       const locationEvents = (location === 'all') ? events : events.filter((event) => event.location === location);
+      const slicedLocationEvents = locationEvents.slice(0, this.state.numberOfEvents);
       this.setState({
-        events: locationEvents
+        events: slicedLocationEvents,
+        currentLocation: location
       });
     });
+  }
+
+  updateNumber = (newNumberOfEvents) => {
+    this.setState({
+      numberOfEvents: newNumberOfEvents
+    });
+    this.updateEvents(this.state.currentLocation);
   }
 
   render() {
@@ -43,7 +54,7 @@ class App extends Component {
       <div className="App">
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <EventList events={this.state.events} />
-        <NumberOfEvents />
+        <NumberOfEvents updateNumber={this.updateNumber} />
       </div>
     );
   }
