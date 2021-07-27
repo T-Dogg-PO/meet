@@ -73,8 +73,9 @@ defineFeature(feature, test => {
         });
 
         and('the user should receive a list of upcoming events in that city', () => {
-            // Not sure why we are using mockData.length here. Shouldn't mockData.length = 2, and shouldn't the number of events now showing = 1?
-            expect(AppWrapper.find('.event')).toHaveLength(mockData.length);
+            // The update() function here waits for the execution of clicking the Berlin option, so that the events list gets updated
+            AppWrapper.update();
+            expect(AppWrapper.find('.event')).toHaveLength(1);
         });
     });
 });
