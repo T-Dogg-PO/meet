@@ -4,6 +4,7 @@ import EventList from './EventList';
 import CitySearch from './CitySearch';
 import NumberOfEvents from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
+import { WarningAlert } from './Alert';
 
 import './nprogress.css';
 
@@ -50,8 +51,14 @@ class App extends Component {
   }
 
   render() {
+    let warningText = ''
+
+    if (!navigator.onLine) {
+        warningText = 'You are currently offline, and the events you are viewing may not be up to date. Please connect to the internet to view an up-to-date list of events'
+    }
     return (
       <div className="App">
+        <WarningAlert text={warningText} />
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <NumberOfEvents updateNumber={this.updateNumber} />
         <EventList events={this.state.events} />
