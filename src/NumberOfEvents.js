@@ -11,7 +11,7 @@ class NumberOfEvents extends Component {
         if (value < 1 || value > 32 || isNaN(value)) {
             this.setState({
                 errorText: 'Select a number from 1 to 32',
-                eventsNumber: ''
+                eventsNumber: this.state.eventsNumber
             });
             event.target.value = '';
         } else {
@@ -26,7 +26,15 @@ class NumberOfEvents extends Component {
     render() {
         return (
             <div className="numberOfEvents">
-                <input type="number" className="events-number-input" value={this.state.eventsNumber} onChange={this.handleInputChanged} onBlur={() => {this.setState({errorText: ''})}} />
+                <input 
+                type="text" 
+                className="events-number-input" 
+                value={this.state.eventsNumber} 
+                onChange={this.handleInputChanged} 
+                onBlur={(e) => {
+                    e.preventDefault();
+                    this.setState({errorText: ''});
+                }} />
                 <ErrorAlert text={this.state.errorText} />
             </div>
         );
