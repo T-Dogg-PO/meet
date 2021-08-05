@@ -6,6 +6,7 @@ import NumberOfEvents from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
 
 import './nprogress.css';
+import { WarningAlert } from './Alert';
 
 class App extends Component {
   state = {
@@ -22,6 +23,15 @@ class App extends Component {
     getEvents().then((events) => {
       if (this.mounted) {
         this.setState({ events: events.slice(0, this.state.numberOfEvents), locations: extractLocations(events) });
+      }
+      if (!navigator.onLine) {
+        this.setState({
+          warningText: "You are currently in Offline Mode. Events may not be up to date. Please reconnect to the internet for an updated list of events."
+        });
+      } else {
+        this.setState({
+          warningText: ""
+        });
       }
     });
   }
@@ -52,6 +62,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <WarningAlert text={this.state.warningText} />
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <NumberOfEvents updateNumber={this.updateNumber} />
         <EventList events={this.state.events} />
