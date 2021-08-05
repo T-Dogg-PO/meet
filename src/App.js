@@ -3,11 +3,11 @@ import './App.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch';
 import NumberOfEvents from './NumberOfEvents';
-import { getEvents, extractLocations, checkToken, getAccessToken } from './api';
-import { WarningAlert } from './Alert';
 import WelcomeScreen from './WelcomeScreen';
+import { getEvents, extractLocations, checkToken, getAccessToken } from './api';
 
 import './nprogress.css';
+import { WarningAlert } from './Alert';
 
 class App extends Component {
   state = {
@@ -20,19 +20,45 @@ class App extends Component {
 
   // Part of loading events when the app loads. componentDidMount will make an API call and save the initial data to state
   async componentDidMount() {
-    const accessToken = localStorage.getItem('access_token');   
-    const isTokenValid = (await checkToken(accessToken)).error ? false : true;   
-    const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get("code");   
-    this.setState({ showWelcomeScreen: !(code || isTokenValid) });
     // Use this boolean to only update the state if this.mounted is true
+    this.mounted = true;
+    const accessToken = localStorage.getItem('access_token');
+    const isTokenValid = (await checkToken(accessToken)).error ? false : true;
+    const searchParams = new URLSearchParams(window.location.search);
+    const code = searchParams.get("code");
+    this.setState({
+      showWelcomeScreen: !(code || isTokenValid)
+    });
     if ((code || isTokenValid) && this.mounted) {
       getEvents().then((events) => {
         if (this.mounted) {
           this.setState({ events: events.slice(0, this.state.numberOfEvents), locations: extractLocations(events) });
         }
+        if (!navigator.onLine) {
+          this.setState({
+            warningText: "You are currently in Offline Mode. Events may not be up to date. Please reconnect to the internet for an updated list of events."
+          });
+        } else {
+          this.setState({
+            warningText: ""
+          });
+        }
       });
     }
+    // getEvents().then((events) => {
+    //   if (this.mounted) {
+    //     this.setState({ events: events.slice(0, this.state.numberOfEvents), locations: extractLocations(events) });
+    //   }
+    //   if (!navigator.onLine) {
+    //     this.setState({
+    //       warningText: "You are currently in Offline Mode. Events may not be up to date. Please reconnect to the internet for an updated list of events."
+    //     });
+    //   } else {
+    //     this.setState({
+    //       warningText: ""
+    //     });
+    //   }
+    // });
   }
 
   componentWillUnmount(){
@@ -59,20 +85,15 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.showWelcomeScreen === undefined) return <div className="App" />  
+    if (this.state.showWelcomeScreen === undefined) return <div className="App" />
 
-
-    let warningText = ''
-
-    if (!navigator.onLine) {
-        warningText = 'You are currently offline, and the events you are viewing may not be up to date. Please connect to the internet to view an up-to-date list of events'
-    }
     return (
       <div className="App">
-        <WarningAlert text={warningText} />
+        <WarningAlert text={this.state.warningText} />
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <NumberOfEvents updateNumber={this.updateNumber} />
         <EventList events={this.state.events} />
+
         <WelcomeScreen showWelcomeScreen={this.state.showWelcomeScreen} getAccessToken={() => { getAccessToken() }} />
       </div>
     );

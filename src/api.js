@@ -30,11 +30,10 @@ export const getEvents = async () => {
         return mockData;
     }
 
-    // Check if user is offline. If they are use events from localStorage instead
     if (!navigator.onLine) {
-        const data = localStorage.getItem("lastEvents");
+        const events = localStorage.getItem("lastEvents");
         NProgress.done();
-        return data ? JSON.parse(data).events : [];
+        return events ? JSON.parse(events).events : [];
     }
 
     const token = await getAccessToken();
