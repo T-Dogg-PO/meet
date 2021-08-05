@@ -11,9 +11,9 @@ class NumberOfEvents extends Component {
         if (value < 1 || value > 32 || isNaN(value)) {
             this.setState({
                 errorText: 'Select a number from 1 to 32',
-                eventsNumber: this.state.eventsNumber
+                eventsNumber: value
             });
-            event.target.value = '';
+            // event.target.value = '';
         } else {
             this.setState({
                 eventsNumber: value,

@@ -54,10 +54,7 @@ class CitySearch extends Component {
                 onChange={this.handleInputChanged} 
                 onFocus={(e) => {
                     e.preventDefault();
-                    this.setState({ showSuggestions: true }); }}
-                onBlur={(e) => {
-                    e.preventDefault();
-                    this.setState({ infoText: '' });
+                    this.setState({ showSuggestions: true });
                 }}
                 />
                 <ul className="suggestions" style={this.state.showSuggestions ? {} : { display: 'none' }} >
