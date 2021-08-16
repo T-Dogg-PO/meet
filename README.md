@@ -4,6 +4,15 @@
 ## Purpose
 The purpose of this MEET app is to practice building a serverless, progressive web application (PWA) with React using a test-driven development technique.
 
+## Technologies Used
+* React - Used to build the bulk of the app's functionality
+* AWS Lambda - Used to make our app serverless
+* The Google Calendar API - This app obtains its data from a Google Calendar
+* Jest - Used for unit/integration testing
+* Jest-Cucumber - Used for acceptance testing
+* Puppeteer - Used for end-to-end testing
+* Atatus - Used for performance monitoring
+
 ## User Story Scenarios (written with the Gherkin "Given-When-Then" syntax)
 
 ### Feature 1: Filter Events by City:
