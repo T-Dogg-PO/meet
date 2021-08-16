@@ -30,14 +30,17 @@ class App extends Component {
     const isTokenValid = (await checkToken(accessToken)).error ? false : true;
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
+    // Show the welcome screen if either the code or the Access Token returns an error
     this.setState({
       showWelcomeScreen: !(code || isTokenValid)
     });
     if ((code || isTokenValid) && this.mounted) {
       getEvents().then((events) => {
+        // Set the events and locations based on what's been input in the appropriate input fields
         if (this.mounted) {
           this.setState({ events: events.slice(0, this.state.numberOfEvents), locations: extractLocations(events) });
         }
+        // Display the warning message if the user is offline
         if (!navigator.onLine) {
           this.setState({
             warningText: "You are currently in Offline Mode. Events may not be up to date. Please reconnect to the internet for an updated list of events."
@@ -51,6 +54,7 @@ class App extends Component {
     }
   }
 
+  // Set this.mounted to false when the component is unmounted so that the state doesn't get updated
   componentWillUnmount(){
     this.mounted = false;
   }
@@ -67,6 +71,7 @@ class App extends Component {
     });
   }
 
+  // Function to update the number of events displaying on the page when the user inputs a new number
   updateNumber = (newNumberOfEvents) => {
     this.setState({
       numberOfEvents: newNumberOfEvents
@@ -74,6 +79,7 @@ class App extends Component {
     this.updateEvents(this.state.currentLocation);
   }
 
+  // Function to get the data for the ScatterChart
   getData = () => {
     const {locations, events} = this.state;
     const data = locations.map((location) => {
@@ -85,6 +91,7 @@ class App extends Component {
   };
 
   render() {
+    // If showWelcomeScreen is undefined (which it should be on initial load) then display an empty div until the component has been mounted and the state can be updated
     if (this.state.showWelcomeScreen === undefined) return <div className="App" />
 
     const { locations, numberOfEvents, events } = this.state;

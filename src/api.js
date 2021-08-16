@@ -93,6 +93,7 @@ export const getAccessToken = async () => {
     return accessToken;
 };
 
+// Function to get the access token from AWS
 const getToken = async (code) => {
     const encodeCode = encodeURIComponent(code);
     const { access_token } = await fetch('https://85s6317vx8.execute-api.eu-central-1.amazonaws.com/dev/api/token' + '/' + encodeCode)

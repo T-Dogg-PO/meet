@@ -6,6 +6,7 @@ class NumberOfEvents extends Component {
         eventsNumber: 32
     }
 
+    // Function to update the state when there is a change to the number input. This also runs a function from the props (App.js) that will change the number of events showing on the screen
     handleInputChanged = (event) => {
         const value = event.target.value;
         if (value < 1 || value > 32 || isNaN(value)) {
@@ -13,7 +14,6 @@ class NumberOfEvents extends Component {
                 errorText: 'Select a number from 1 to 32',
                 eventsNumber: value
             });
-            // event.target.value = '';
         } else {
             this.setState({
                 eventsNumber: value,

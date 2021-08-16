@@ -3,9 +3,11 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 
 const EventGenre = ({ events }) => {
+    // Manually set the genres and colours that we will use in the Pie Chart
     const genres = ['React', 'JavaScript', 'Node', 'jQuery', 'AngularJS'];
     const colours = ['#0047AB', '#58508d', '#bc5090', '#ff6361', '#ffa600'];
 
+    // Function to get the data that we will include in the Pie Chart
     const getData = () => {
         const data = genres.map((genre) => {
             const value = events.filter((event) =>
@@ -16,10 +18,12 @@ const EventGenre = ({ events }) => {
         return data;
     }
 
+    // useEffect will listen to changes to the events prop and then set the state
     useEffect(() => {
         setData(() => getData());
     }, [events]);
 
+    // useState will set the state when there are events
     const [data, setData] = useState([]);
 
     return (
