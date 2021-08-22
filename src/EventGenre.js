@@ -37,7 +37,14 @@ const EventGenre = ({ events }) => {
               labelLine={false}
               outerRadius={80}
               dataKey="value"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              label={({ name, percent }) => {
+                if (percent < 0.05) {
+                  return ``
+                } else {
+                  return `${name} ${(percent * 100).toFixed(0)}%`
+                }
+                }
+              }
             >
               {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={colours[index]}/>
