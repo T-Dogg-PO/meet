@@ -1,6 +1,7 @@
 # MEET
 ## A React app for finding events in different cities
 A live version of this site can be found here (hosted by Github Pages) - https://t-dogg-po.github.io/meet/
+<img src="assets/meet.PNG" style="max-width: 100%;">
 
 ## Purpose
 The purpose of this MEET app is to practice building a serverless, progressive web application (PWA) with React using a test-driven development technique. This app will read from the CareerFoundry Calendar to display upcoming events, as well as display graphical visualisations of event data (e.g. number of events per city)
